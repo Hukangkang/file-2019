@@ -1,3 +1,8 @@
+/* 
+点击缩略图弹出视频
+缩略图和视频的名字一致
+视频为mp4格式
+*/
 ;$.fn.alertVideo = function(){
     $('.mask').hide();
     $(this).click(function(){
