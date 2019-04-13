@@ -7,6 +7,8 @@
             <li></li>
             <li></li>
         </ul>
+        <div class="prev"><</div>
+        <div class="next">></div>
     </div>
     css:
     .autoplay {
