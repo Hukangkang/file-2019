@@ -1,6 +1,6 @@
-// 定义 宽1920px的设计图的100px = 浏览器的1rem
+// 定义 宽750px的设计图的100px = 浏览器的1rem
 function changeSize(){
-    let designSize = 1920;
+    let designSize = 750;
     let html = document.documentElement;
     let wW = html.clientWidth;
     let rem = wW * 100 / designSize; 
