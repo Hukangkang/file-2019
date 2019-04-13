@@ -1,4 +1,8 @@
-$.fn.screenshot = function (mask) {
+/*
+点击缩略图弹出大图；类似alert-video插件
+直接把原图片放大了
+*/
+;$.fn.screenshot = function (mask) {
     var box = $(mask).find('div');
     $(this).find('li').hover(function(){
         $(this).find('p').hide()
