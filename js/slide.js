@@ -1,6 +1,6 @@
 /* 
-    自己封装的一个无缝轮播插件，自动创建分页器(项目需要，只写了滑动效果，没有左右按钮)。
-    需要传入被选中的分页器的class
+    自己封装的一个无缝轮播插件，自动创建分页器
+    需要传入被选中的分页器的class和轮播时间间隔
     html结构为：
     <div class='autoplay'>
         <ul>
@@ -53,26 +53,52 @@
     .autoplay ol .bg {
       background: #EA2110;
     }
+    .prev,.next{
+        width: 20px;
+        height: 20px;
+        background: rgba(0,0,0,.3s);
+        position: absolute;
+        top: 140px;
+    }
+    .prev{
+        left: 0;
+        display: none;
+    }
+    .next{
+        right: 0;
+        display: none;
+    }
     调用方法 $('.autoplay').slide('bg')
  */ 
-$.fn.slide = function (bg) {
+/* 
+   无缝轮播插件(自动创建对应个数的分页器)。
+    需要传入被选中的分页器的class和轮播的时间间隔。
+    html结构为：
+    <div class='autoplay'>
+        <ul>
+            <li></li>
+            <li></li>
+        </ul>
+        <ol></ol>
+        <div class="prev"><</div>
+        <div class="next">></div>
+    </div>
+    调用方法 $('.autoplay').slide('bg',1000)
+
+ */ 
+$.fn.slide = function (bg,speed) {
     var uls = $(this).find("ul"); // 图片列表
     var lis  = $(this).find('ul li'); // 图片
-    var imgW = lis.width();
-    // 创建分页器
-    var imgLen = $(this).find('ul li').length;
-    var html = '<ol class="ol">';
-    for(var i = 0; i < imgLen; i++){
-        html += '<li></li>';
-    }
-    html += '</ol>';
-    $(this).append(html);
-
-    $(this).find('ol li').eq(0).addClass(bg)
-
     var ols = $(this).find("ol"); // 分页器列表
+    var olhtml = ''; // 动态添加分页器
+    for(let i = 0; i < lis.length;i++){
+        olhtml += '<li></li>'
+    }
+    ols.append(olhtml);
+    ols.find('li').eq(0).addClass(bg)
+    // console.log(olhtml)
     var ollis = $(this).find("ol li"); // 分页器
-
+    var imgW = lis.width();
     var firstImg = lis.first().clone();
     uls.append(firstImg);
     var ullis = $(this).find('ul li');
@@ -84,7 +110,7 @@ $.fn.slide = function (bg) {
         timer = setInterval(function(){
             i++;
             moveImg(i);
-        }, 2000);
+        }, speed);
     }
     function moveImg(num){
         if(i==ullis.length){
@@ -102,28 +128,22 @@ $.fn.slide = function (bg) {
             ollis.eq(i).addClass(bg).siblings().removeClass(bg);
         }
     }
-    $(this).mousedown(function(e){
-        e.preventDefault();
-        startX=e.pageX;
-        // startY=e.pageY;
+    $(this).hover(function(){
         clearInterval(timer)
-        $(this).mousemove(function(e){
-            e.preventDefault();
-            moveEndX=e.pageX;
-            // moveEndY=e.pageY;
-            X=moveEndX-startX;
-            // Y=moveEndY-startY;
-        })
-    }).mouseup(function(){
-        $(this).off("mousemove")
-        if ( X > 0 ) {
-            i--;
-            moveImg(i);
-        }else if(X < 0){
-            i++;
-            moveImg(i);
-        }
+        $('.prev').fadeIn()
+        $('.next').fadeIn()
+    },function(){
         autoPlay()
+        $('.prev').fadeOut()
+        $('.next').fadeOut()
+    })
+    $('.prev').click(function(){
+        i--;
+        moveImg(i);
+    })
+    $('.next').click(function(){
+        i++;
+        moveImg(i);
     })
     ollis.click(function(){
         i = $(this).index();
